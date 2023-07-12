@@ -64,6 +64,8 @@ link_directories(LIBRARY_OUTPUT_PATH)
 
 # 生成库文件
 add_library(base SHARED ${LIB_PATH}/base.cpp)
+set_target_properties(base PROPERTIES OUTPUT_NAME "base" SUFFIX ".dll")
+
 # 库文件生成结束
 
 # 生成可执行文件
