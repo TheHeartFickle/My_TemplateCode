@@ -25,15 +25,9 @@ else()
     set(BUILD_DIR ${PROJECT_SOURCE_DIR}/make/release)
 endif()
 
-#链接库输出路径
-set(LIBRARY_OUTPUT_PATH ${BUILD_DIR})
-# 生成库文件
-set(LIBRARY_LIST
-    ${PROJECT_SOURCE_DIR}/src/base.cpp
-    )
-add_library(base SHARED ${LIBRARY_LIST})
-# 链接库文件
-link_directories(LIBRARY_OUTPUT_PATH)
+# 指定头文件路径
+file(GLOB HEADLIST ${PROJECT_SOURCE_DIR}/include/*.h)
+include_directories(${HEADLIST})
 
 # 图标链接
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -59,21 +53,24 @@ else()
     message("这个系统不认识")
 endif()
 
+#链接库输出路径
+set(LIBRARY_OUTPUT_PATH ${BUILD_DIR})
+set(LIB_PATH ${PROJECT_SOURCE_DIR}/src)
 # 可执行文件输出路径
 set(EXECUTABLE_OUTPUT_PATH ${BUILD_DIR})
+
+# 将库文件路径添加至链接器在搜索库文件时应该查找的目录路径
+link_directories(LIBRARY_OUTPUT_PATH)
+
+# 生成库文件
+add_library(base SHARED ${LIB_PATH}/base.cpp)
+# 库文件生成结束
+
 # 生成可执行文件
-set(EXEDIR 
-    ${PROJECT_SOURCE_DIR}/src/main.cpp
-    ${ICON_PATH}/icon.o
-)
-add_executable(main ${EXEDIR})
+add_executable(main ${PROJECT_SOURCE_DIR}/main.cpp ${ICON_PATH}/icon.o)
 
 # 链接库文件
 target_link_libraries(main base)
-
-# 指定头文件路径
-file(GLOB HEADLIST ${PROJECT_SOURCE_DIR}/include/*.h)
-include_directories(HEADLIST)
 
 # add_custom_command(
 #     TARGET test
